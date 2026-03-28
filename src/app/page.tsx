@@ -470,7 +470,7 @@ export default function Page() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gray-900 dark:bg-white rounded-lg text-white dark:text-gray-900">
-                <a href="https://github.com/diegoperea20" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/diegoperea20/GitHub-Profile-Analytics" target="_blank" rel="noopener noreferrer">
                   <GithubIcon  />
                 </a>
               </div>
