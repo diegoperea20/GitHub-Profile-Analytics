@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-// Types
+// ── Types ───────────────────────────────────────────────────────────────────
 interface GitHubRepo {
   id: number;
   name: string;
@@ -68,15 +68,10 @@ interface ProfileAnalytics {
   };
   activityScore: number;
   languageDiversity: number;
-  accountAge: {
-    years: number;
-    months: number;
-    days: number;
-    createdAt: string;
-  };
+  accountAge: { years: number; months: number; days: number; createdAt: string };
 }
 
-// Language colors
+// ── Language colors — preserved palette ────────────────────────────────────
 const languageColors: Record<string, string> = {
   JavaScript: "#f1e05a",
   TypeScript: "#3178c6",
@@ -105,9 +100,9 @@ const languageColors: Record<string, string> = {
   default: "#6b7280",
 };
 
-// Icons
-const GithubIcon = () => (
-  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+// ── Icons (stroke 1.6, minimal) ────────────────────────────────────────────
+const GithubIcon = ({ className = "w-[18px] h-[18px]" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden>
     <path
       fillRule="evenodd"
       d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
@@ -115,317 +110,206 @@ const GithubIcon = () => (
     />
   </svg>
 );
-
-const StarIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+const SearchIcon = ({ className = "w-[16px] h-[16px]" }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
   </svg>
 );
-
-const ForkIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      d="M5 2a2 2 0 00-2 2v2.5a.5.5 0 001 0V4a1 1 0 011-1h8a1 1 0 011 1v2.5a.5.5 0 001 0V4a2 2 0 00-2-2H5zm8 10a2 2 0 100-4 2 2 0 000 4zm0 1a3 3 0 001-5.83V6a1 1 0 10-2 0v1.17A3.001 3.001 0 0113 13zm-8-2a2 2 0 11-4 0 2 2 0 014 0zm0 1a3.001 3.001 0 01-2.83-2H1a1 1 0 100 2h1.17A3.001 3.001 0 005 12zm0-6a2 2 0 100-4 2 2 0 000 4z"
-      clipRule="evenodd"
-    />
-  </svg>
+const StarIcon = (p: { className?: string }) => (
+  <svg className={p.className ?? "w-4 h-4"} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+);
+const ForkIcon = (p: { className?: string }) => (
+  <svg className={p.className ?? "w-4 h-4"} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 12a2 2 0 100 4 2 2 0 000-4zm10-8a2 2 0 100 4 2 2 0 000-4zM7 8a2 2 0 100-4 2 2 0 000 4zm10 8v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4" /></svg>
+);
+const RepoIcon = (p: { className?: string }) => (
+  <svg className={p.className ?? "w-4 h-4"} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" /></svg>
+);
+const UsersIcon = (p: { className?: string }) => (
+  <svg className={p.className ?? "w-4 h-4"} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M12 11a3 3 0 100-6 3 3 0 000 6zM6 19a5 5 0 0110 0v1H6v-1zM18 11a2 2 0 100-4 2 2 0 000 4zM20 19v-1a5 5 0 00-3-4.5" /></svg>
+);
+const CalendarIcon = (p: { className?: string }) => (
+  <svg className={p.className ?? "w-4 h-4"} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+);
+const ChartIcon = (p: { className?: string }) => (
+  <svg className={p.className ?? "w-4 h-4"} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M3 19V7m6 12V11m6 8V5m6 14V9" /></svg>
+);
+const CommitIcon = (p: { className?: string }) => (
+  <svg className={p.className ?? "w-4 h-4"} fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" d="M12 16a2 2 0 100-4 2 2 0 000 4zM12 8V4m0 16v-4M8 12H4m16 0h-4" /></svg>
 );
 
-const RepoIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M2 4.75A2.75 2.75 0 014.75 2h10.5a.75.75 0 01.75.75v14.5a.75.75 0 01-.75.75H4.75A2.75 2.75 0 012 15.25V4.75zM4.75 3.5A1.25 1.25 0 003.5 4.75v10.5c0 .69.56 1.25 1.25 1.25h9.75V3.5H4.75z" />
-  </svg>
-);
-
-const CommitIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      d="M10 2a3 3 0 10-2.83 4h-.007A3.001 3.001 0 0010 9.83V18a1 1 0 102 0V9.83A3.001 3.001 0 0012.837 6h-.006A3 3 0 0010 2zm0 4a1 1 0 100-2 1 1 0 000 2z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const UsersIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-  </svg>
-);
-
-const CalendarIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const ChartIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-  </svg>
-);
-
-const TagIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const FireIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.616-.604 1.306-.814 2.024-.168.627-.27 1.283-.314 1.948a11.924 11.924 0 00-.14 2.59c.1 1.358.39 2.485.815 3.412.24.52.502.966.78 1.334.27.365.56.668.855.933.293.264.587.486.873.68.32.21.632.38.927.52.3.14.59.25.86.32a4.4 4.4 0 001.46.1c.41-.05.82-.15 1.22-.27.4-.13.78-.29 1.15-.49.37-.2.72-.43 1.06-.68.34-.26.66-.54.96-.84.3-.3.58-.62.83-.96.25-.34.48-.69.68-1.05.2-.36.36-.74.49-1.12.13-.38.22-.77.27-1.16.05-.4.0-.8-.1-1.2-.1-.4-.2-.8-.3-1.18-.1-.38-.2-.75-.3-1.1-.1-.36-.2-.7-.3-1.02-.1-.32-.2-.62-.3-.9-.1-.28-.2-.54-.3-.78-.1-.24-.2-.46-.3-.66-.1-.2-.2-.38-.3-.54-.1-.16-.2-.3-.3-.42-.1-.12-.2-.22-.3-.3-.1-.08-.2-.14-.3-.18-.1-.04-.2-.06-.3-.06s-.2.02-.3.06c-.1.04-.2.1-.3.18-.1.08-.2.18-.3.3-.1.12-.2.26-.3.42-.1.16-.2.34-.3.54-.1.2-.2.42-.3.66-.1.24-.2.5-.3.78-.1.28-.2.58-.3.9-.1.32-.2.66-.3 1.02-.1.35-.2.72-.3 1.1-.1.38-.2.78-.3 1.18-.1.4-.15.8-.1 1.2.05.39.14.78.27 1.16.13.38.29.76.49 1.12.2.36.43.71.68 1.05.25.34.53.66.83.96.3.3.62.58.96.84.34.25.69.48 1.06.68.37.2.75.36 1.15.49.4.12.81.22 1.22.27a4.4 4.4 0 001.46-.1c.27-.07.56-.18.86-.32.295-.14.607-.31.927-.52.286-.194.58-.416.873-.68.295-.265.585-.568.855-.933.28-.368.54-.814.78-1.334.425-.927.715-2.054.815-3.412a11.924 11.924 0 00-.14-2.59c-.044-.665-.146-1.321-.314-1.948-.21-.718-.48-1.408-.814-2.024-.167-.403-.356-.786-.57-1.116-.208-.322-.477-.65-.822-.88a1 1 0 00-1.45.385z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const SearchIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-    />
-  </svg>
-);
-
-const LoadingSpinner = () => (
-  <svg
-    className="animate-spin h-5 w-5 text-white"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <circle
-      className="opacity-25"
-      cx="12"
-      cy="12"
-      r="10"
-      stroke="currentColor"
-      strokeWidth="4"
-    ></circle>
-    <path
-      className="opacity-75"
-      fill="currentColor"
-      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-    ></path>
-  </svg>
-);
-
-// Components
-function StatCard({
-  title,
-  value,
-  icon,
-  color,
-  subtitle,
-}: {
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
-  color: string;
-  subtitle?: string;
-}) {
+// ── Primitives ──────────────────────────────────────────────────────────────
+function Eyebrow({ children, action }: { children: string; action?: React.ReactNode }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            {title}
-          </p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-            {value}
-          </p>
-          {subtitle && (
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-              {subtitle}
-            </p>
-          )}
-        </div>
-        <div className={`p-3 rounded-lg ${color}`}>{icon}</div>
-      </div>
+    <div className="flex items-center gap-3 mb-5">
+      <span className="text-[11px] font-mono tracking-[0.14em] font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+        {children}
+      </span>
+      <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+      {action}
     </div>
   );
 }
 
-function LanguageBar({
-  language,
-  percentage,
-  count,
-}: {
-  language: string;
-  percentage: number;
-  count: number;
-}) {
-  const color = languageColors[language] || languageColors.default;
-
+function SectionCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className="mb-3">
-      <div className="flex justify-between items-center mb-1">
-        <div className="flex items-center gap-2">
-          <span
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: color }}
-          ></span>
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            {language}
-          </span>
-        </div>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          {count} repos ({percentage}%)
+    <div
+      className={`bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ── Metric strip cell ──────────────────────────────────────────────────────
+function MetricCell({
+  label,
+  value,
+  sub,
+  icon,
+}: {
+  label: string;
+  value: string | number;
+  sub?: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="px-5 py-5 flex flex-col gap-3 min-w-0">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-mono tracking-[0.12em] text-zinc-500 dark:text-zinc-400 font-medium">
+          {label}
+        </span>
+        <span className="w-7 h-7 grid place-items-center rounded-md bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400">
+          {icon}
         </span>
       </div>
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-        <div
-          className="h-2 rounded-full transition-all duration-500"
-          style={{ width: `${percentage}%`, backgroundColor: color }}
-        ></div>
+      <div>
+        <div className="text-[26px] font-semibold tracking-[-0.02em] leading-none tabular text-zinc-900 dark:text-white">
+          {value}
+        </div>
+        {sub && <div className="text-[12px] text-zinc-500 dark:text-zinc-400 mt-1 font-mono">{sub}</div>}
       </div>
     </div>
   );
 }
 
-function TopicBadge({ topic, count }: { topic: string; count: number }) {
+// ── Activity dial — signature element ─────────────────────────────────────
+function ActivityDial({ score }: { score: number }) {
+  const r = 46;
+  const c = 2 * Math.PI * r;
+  const dash = c - (score / 100) * c;
+  const color = score >= 80 ? "#10b981" : score >= 60 ? "#2563eb" : score >= 40 ? "#f59e0b" : "#ef4444";
   return (
-    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-purple-500 to-pink-500 text-white mr-2 mb-2">
-      {topic}{" "}
-      <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">
-        {count}
-      </span>
-    </span>
-  );
-}
-
-function ActivityScoreCircle({ score }: { score: number }) {
-  const circumference = 2 * Math.PI * 45;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
-
-  const getColor = (score: number) => {
-    if (score >= 80) return "#10b981";
-    if (score >= 60) return "#3b82f6";
-    if (score >= 40) return "#f59e0b";
-    return "#ef4444";
-  };
-
-  return (
-    <div className="flex flex-col items-center">
-      <svg className="w-32 h-32 transform -rotate-90">
+    <div className="relative flex flex-col items-center">
+      <svg width={112} height={112} className="-rotate-90" viewBox="0 0 112 112" role="img" aria-label={`Activity score ${score} out of 100`}>
+        <circle cx={56} cy={56} r={r} stroke="currentColor" strokeWidth={6} fill="none" className="text-zinc-100 dark:text-zinc-800" />
+        {/* tick marks */}
+        {Array.from({ length: 20 }).map((_, i) => {
+          const a = (i / 20) * 2 * Math.PI - Math.PI / 2;
+          const x1 = 56 + Math.cos(a) * 52;
+          const y1 = 56 + Math.sin(a) * 52;
+          const x2 = 56 + Math.cos(a) * 48;
+          const y2 = 56 + Math.sin(a) * 48;
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth={i % 5 === 0 ? 1.2 : 0.7} className="text-zinc-200 dark:text-zinc-700" />;
+        })}
         <circle
-          cx="64"
-          cy="64"
-          r="45"
-          stroke="currentColor"
-          strokeWidth="8"
-          fill="transparent"
-          className="text-gray-200 dark:text-gray-700"
-        />
-        <circle
-          cx="64"
-          cy="64"
-          r="45"
-          stroke={getColor(score)}
-          strokeWidth="8"
-          fill="transparent"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
+          cx={56}
+          cy={56}
+          r={r}
+          stroke={color}
+          strokeWidth={6}
+          fill="none"
+          strokeDasharray={c}
+          strokeDashoffset={dash}
           strokeLinecap="round"
+          style={{ transition: "stroke-dashoffset 1.1s cubic-bezier(0.16,1,0.3,1)" }}
         />
       </svg>
-      <div className="absolute mt-8">
-        <span className="text-3xl font-bold text-gray-900 dark:text-white">
-          {score}
-        </span>
+      <div className="absolute inset-0 grid place-items-center">
+        <div className="text-center">
+          <div className="text-[30px] font-semibold tracking-[-0.03em] leading-none tabular text-zinc-900 dark:text-white">{score}</div>
+          <div className="text-[9px] font-mono tracking-[0.16em] text-zinc-500 dark:text-zinc-400 font-medium -mt-0.5">/ 100</div>
+        </div>
       </div>
     </div>
   );
 }
 
-function CommitsChart({
-  commitsByYear,
-}: {
-  commitsByYear: { year: number; count: number }[];
-}) {
-  const maxCount = Math.max(...commitsByYear.map((c) => c.count), 1);
-
+// ── Language viz ───────────────────────────────────────────────────────────
+function LanguageSpine({ items }: { items: { language: string; percentage: number }[] }) {
   return (
-    <div className="flex items-end justify-between h-40 gap-2">
-      {commitsByYear.slice(-10).map(({ year, count }) => (
-        <div key={year} className="flex flex-col items-center flex-1">
-          <div
-            className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-sm transition-all duration-500 hover:from-blue-600 hover:to-blue-500"
-            style={{
-              height: `${(count / maxCount) * 100}%`,
-              minHeight: count > 0 ? "8px" : "0",
-            }}
-          ></div>
-          <span className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            {year}
-          </span>
-          <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-            {count}
-          </span>
-        </div>
+    <div className="flex h-2 rounded-full overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+      {items.map((l) => (
+        <div
+          key={l.language}
+          title={`${l.language} ${l.percentage}%`}
+          style={{ width: `${l.percentage}%`, backgroundColor: languageColors[l.language] ?? languageColors.default }}
+        />
       ))}
     </div>
   );
 }
+function LanguageRow({ language, percentage, count }: { language: string; percentage: number; count: number }) {
+  const color = languageColors[language] ?? languageColors.default;
+  return (
+    <div className="group flex items-center gap-3 py-2.5 border-b border-zinc-100 dark:border-zinc-800 last:border-0">
+      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+      <span className="text-[13px] font-medium text-zinc-800 dark:text-zinc-100 min-w-0 flex-1 truncate">{language}</span>
+      <span className="text-[12px] font-mono tabular text-zinc-500 dark:text-zinc-400">
+        {count} · {percentage}%
+      </span>
+      <div className="hidden sm:block w-20 h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${percentage}%`, backgroundColor: color }} />
+      </div>
+    </div>
+  );
+}
 
-function RepoCard({ repo }: { repo: GitHubRepo }) {
+// ── Repo artifact card ─────────────────────────────────────────────────────
+function RepoArtifact({ repo }: { repo: GitHubRepo }) {
   return (
     <a
       href={repo.html_url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-600"
+      className="group block rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-800/40 hover:bg-white dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all p-4"
     >
-      <h4 className="font-semibold text-gray-900 dark:text-white truncate">
-        {repo.name}
-      </h4>
+      <div className="flex items-start justify-between gap-3">
+        <h4 className="text-[13.5px] font-semibold leading-5 text-zinc-900 dark:text-zinc-100 group-hover:text-[#2563eb] dark:group-hover:text-[#60a5fa] transition-colors line-clamp-1">
+          {repo.name}
+        </h4>
+        <span className="shrink-0 w-6 h-6 grid place-items-center rounded-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-400 group-hover:text-zinc-600 transition-colors">
+          <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path d="M7 17L17 7M17 7H9m8 0v8" /></svg>
+        </span>
+      </div>
       {repo.description && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+        <p className="text-[12.5px] leading-5 text-zinc-600 dark:text-zinc-400 mt-1.5 line-clamp-2 min-h-[40px]">
           {repo.description}
         </p>
       )}
-      <div className="flex items-center gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
+      <div className="flex flex-wrap items-center gap-2 mt-3">
         {repo.language && (
-          <span className="flex items-center gap-1">
-            <span
-              className="w-3 h-3 rounded-full"
-              style={{
-                backgroundColor:
-                  languageColors[repo.language] || languageColors.default,
-              }}
-            ></span>
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium px-2 py-1 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300">
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: languageColors[repo.language] ?? languageColors.default }} />
             {repo.language}
           </span>
         )}
-        <span className="flex items-center gap-1">
-          <StarIcon /> {repo.stargazers_count}
+        <span className="inline-flex items-center gap-1 text-[11px] font-mono tabular text-zinc-500 dark:text-zinc-400">
+          <StarIcon className="w-3.5 h-3.5" /> {repo.stargazers_count.toLocaleString()}
         </span>
-        <span className="flex items-center gap-1">
-          <ForkIcon /> {repo.forks_count}
+        <span className="inline-flex items-center gap-1 text-[11px] font-mono tabular text-zinc-500 dark:text-zinc-400">
+          <ForkIcon className="w-3.5 h-3.5" /> {repo.forks_count.toLocaleString()}
         </span>
+        {repo.open_issues_count > 0 && (
+          <span className="text-[11px] font-mono tabular text-amber-600 dark:text-amber-400">
+            {repo.open_issues_count} issues
+          </span>
+        )}
       </div>
     </a>
   );
 }
 
+// ── Main page ──────────────────────────────────────────────────────────────
 export default function Page() {
   const [username, setUsername] = useState("");
   const [analytics, setAnalytics] = useState<ProfileAnalytics | null>(null);
@@ -434,24 +318,16 @@ export default function Page() {
 
   const fetchAnalytics = async () => {
     if (!username.trim()) return;
-
     setLoading(true);
     setError(null);
     setAnalytics(null);
-
     try {
-      const response = await fetch(
-        `/api/github?username=${encodeURIComponent(username)}`,
-      );
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch data");
-      }
-
+      const res = await fetch(`/api/github?username=${encodeURIComponent(username.trim())}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not fetch profile");
       setAnalytics(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unexpected error");
     } finally {
       setLoading(false);
     }
@@ -462,489 +338,355 @@ export default function Page() {
     fetchAnalytics();
   };
 
+  const suggestions = ["torvalds","diegoperea20"];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-900 dark:bg-white rounded-lg text-white dark:text-gray-900">
-                <a href="https://github.com/diegoperea20/GitHub-Profile-Analytics" target="_blank" rel="noopener noreferrer">
-                  <GithubIcon  />
-                </a>
+    <div className="min-h-screen flex flex-col">
+      {/* Header — 56px rule, editorial */}
+      <header className="sticky top-0 z-40 backdrop-blur-[12px] bg-white/85 dark:bg-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-[56px] flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <a href="https://github.com/diegoperea20/GitHub-Profile-Analytics" target="_blank" rel="noopener noreferrer" className="w-8 h-8 grid place-items-center rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shrink-0">
+              <GithubIcon className="w-[18px] h-[18px]" />
+            </a>
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-2">
+                <h1 className="text-[14px] font-semibold tracking-[-0.015em] leading-none text-zinc-900 dark:text-white">GitHub Profile Analytics</h1>
+               
               </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  GitHub Profile Analytics
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Analyze any GitHub profile in depth
-                </p>
-              </div>
+             
             </div>
           </div>
+          <a href="https://github.com/diegoperea20" target="_blank" rel="noopener noreferrer" className="hidden sm:inline-flex text-[12px] font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+            by Diego Perea →
+          </a>
         </div>
       </header>
 
-      {/* Search Section */}
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <div className="flex-1 relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <SearchIcon />
-              </div>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter GitHub username (e.g., torvalds, gaearon, sindresorhus)"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white placeholder-gray-400 text-lg"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading || !username.trim()}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 min-w-[140px]"
-            >
-              {loading ? (
-                <>
-                  <LoadingSpinner />
-                  <span>Analyzing...</span>
-                </>
-              ) : (
-                <>
-                  <SearchIcon />
-                  <span>Analyze</span>
-                </>
-              )}
-            </button>
-          </form>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div className="mt-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-700 dark:text-red-400">
-            {error}
+      <main className="flex-1">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
+          {/* Hero — thesis */}
+          <div className="max-w-[720px]">
+            
+            <h2 className="mt-4 text-[30px] sm:text-[36px] font-semibold tracking-[-0.03em] leading-[0.95] text-zinc-900 dark:text-white">
+              Analyze any
+              <br />
+              <span className="font-mono font-medium tracking-[-0.04em] text-zinc-500 dark:text-zinc-400">GitHub profile</span> in seconds.
+            </h2>
+            <p className="mt-3 text-[15px] leading-6 text-zinc-600 dark:text-zinc-400 max-w-[560px]">
+              Not a generic dashboard. A technical dossier: weighted languages, topics, and repositories as artifacts  built from live GitHub data.
+            </p>
           </div>
-        )}
 
-        {/* Analytics Dashboard */}
-        {analytics && (
-          <div className="mt-8 space-y-8">
-            {/* User Profile Header */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                <Image
-                  src={analytics.user.avatar_url}
-                  alt={analytics.user.login}
-                  width={96}
-                  height={96}
-                  className="w-24 h-24 rounded-full border-4 border-gray-200 dark:border-gray-600"
+          {/* Search — command palette */}
+          <SectionCard className="mt-7 p-3 sm:p-4">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1 relative group">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400 group-focus-within:text-zinc-600 dark:group-focus-within:text-zinc-300 transition-colors">
+                  <SearchIcon className="w-4 h-4" />
+                </div>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="GitHub username — e.g. torvalds"
+                  spellCheck={false}
+                  autoComplete="off"
+                  className="w-full h-11 pl-10 pr-28 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-[14px] font-medium placeholder:text-zinc-400 dark:placeholder:text-zinc-500 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-300 dark:focus:border-zinc-600 focus:bg-white dark:focus:bg-zinc-900 transition-colors"
                 />
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {analytics.user.name || analytics.user.login}
-                    </h2>
-                    <a
-                      href={analytics.user.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                    >
-                      <GithubIcon />
-                    </a>
-                  </div>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    @{analytics.user.login}
-                  </p>
-                  {analytics.user.bio && (
-                    <p className="text-gray-600 dark:text-gray-300 mt-2">
-                      {analytics.user.bio}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
-                    {analytics.user.location && (
-                      <span className="flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        {analytics.user.location}
-                      </span>
-                    )}
-                    {analytics.user.company && (
-                      <span className="flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3-1h1v1H7V3zm1 3H7v1h1V6zm0 3H7v1h1V9zm0 3H7v1h1v-1zm3-6h-1v1h1V6zm0 3h-1v1h1V9zm0 3h-1v1h1v-1zm3-6h-1v1h1V6zm0 3h-1v1h1V9z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        {analytics.user.company}
-                      </span>
-                    )}
-                    {analytics.user.blog && (
-                      <a
-                        href={
-                          analytics.user.blog.startsWith("http")
-                            ? analytics.user.blog
-                            : `https://${analytics.user.blog}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 hover:text-blue-500"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.235A7.009 7.009 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.235A7.009 7.009 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.497.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.497-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.235c.454-1.265.748-2.689.837-4.235h1.946a7.009 7.009 0 01-2.783 4.235zm-6.268 0c-.454-1.265-.748-2.689-.837-4.235H4.083a7.009 7.009 0 002.783 4.235z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        Website
-                      </a>
-                    )}
-                    {analytics.user.twitter_username && (
-                      <a
-                        href={`https://twitter.com/${analytics.user.twitter_username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 hover:text-blue-400"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                        @{analytics.user.twitter_username}
-                      </a>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col items-center">
-                  <ActivityScoreCircle score={analytics.activityScore} />
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    Activity Score
-                  </p>
-                </div>
+                <span className="hidden sm:inline-flex absolute right-1.5 top-1.5 bottom-1.5 items-center gap-1 px-2 rounded-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-[11px] font-mono text-zinc-500">
+                  ↵ Enter
+                </span>
               </div>
+              <button
+                type="submit"
+                disabled={loading || !username.trim()}
+                className="h-11 px-6 inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-900 text-white text-[13px] font-semibold tracking-[-0.01em] hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+                style={loading ? { background: "#18181b", color: "#ffffff" } as React.CSSProperties : { background: "linear-gradient(135deg,#2563eb 0%,#9333ea 100%)", color: "#ffffff" } as React.CSSProperties}
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx={12} cy={12} r={10} stroke="currentColor" strokeWidth={4} /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                    <span className="text-white">Analyzing…</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-white">Analyze <span className="hidden sm:inline">profile</span> <span aria-hidden>→</span></span>
+                  </>
+                )}
+              </button>
+            </form>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-mono tracking-[0.08em] text-zinc-400">TRY</span>
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setUsername(s)}
+                  className="text-[12px] font-mono px-2.5 py-1 rounded-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-600 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                >
+                  {s}
+                </button>
+              ))}
             </div>
+          </SectionCard>
 
-            {/* Main Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard
-                title="Total Repositories"
-                value={analytics.totalRepos}
-                icon={<RepoIcon />}
-                color="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-              />
-              <StatCard
-                title="Total Stars"
-                value={analytics.totalStars.toLocaleString()}
-                icon={<StarIcon />}
-                color="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400"
-              />
-              <StatCard
-                title="Total Forks"
-                value={analytics.totalForks.toLocaleString()}
-                icon={<ForkIcon />}
-                color="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
-              />
-              <StatCard
-                title="Followers"
-                value={analytics.user.followers.toLocaleString()}
-                icon={<UsersIcon />}
-                color="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
-              />
+          {error && (
+            <div className="mt-4 rounded-xl border-l-[3px] border-red-500 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 px-4 py-3 text-[13px] leading-5 text-red-800 dark:text-red-200">
+              <span className="font-semibold">Failed to load:</span> {error}
             </div>
+          )}
 
-            {/* Secondary Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard
-                title="Following"
-                value={analytics.user.following.toLocaleString()}
-                icon={<UsersIcon />}
-                color="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
-              />
-              <StatCard
-                title="Open Issues"
-                value={analytics.totalOpenIssues.toLocaleString()}
-                icon={
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z" />
-                  </svg>
-                }
-                color="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-              />
-              <StatCard
-                title="Language Diversity"
-                value={`${analytics.languageDiversity}%`}
-                icon={<ChartIcon />}
-                color="bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400"
-                subtitle={`${analytics.topLanguages.length} languages`}
-              />
-              <StatCard
-                title="Account Age"
-                value={`${analytics.accountAge.years}y ${analytics.accountAge.months}m`}
-                icon={<CalendarIcon />}
-                color="bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400"
-                subtitle={`Since ${new Date(analytics.accountAge.createdAt).getFullYear()}`}
-              />
+          {/* Empty state */}
+          {!analytics && !error && !loading && (
+            <div className="mt-6 grid sm:grid-cols-3 gap-3 text-[13px]">
+              {[
+                { k: "Languages", v: "Real distribution by repository count, not estimated bytes. Spine + per-language detail." },
+                { k: "Topics", v: "Recurring themes extracted from repository topics — the vocabulary of the profile." },
+                { k: "Activity", v: "Score 0–100 based on stars, repositories, commits and followers. Objective and auditable." },
+              ].map((c) => (
+                <div key={c.k} className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/50 p-4">
+                  <div className="text-[11px] font-mono tracking-[0.12em] text-zinc-500 dark:text-zinc-400">{c.k.toUpperCase()}</div>
+                  <div className="mt-1.5 leading-5 text-zinc-600 dark:text-zinc-400">{c.v}</div>
+                </div>
+              ))}
             </div>
+          )}
 
-            {/* Commit Statistics */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <CommitIcon />
-                Commit Statistics (Estimated)
-              </h3>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {analytics.commitStats.estimatedTotalCommits.toLocaleString()}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Total Commits
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {analytics.commitStats.averageCommitsPerDay}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Per Day
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {analytics.commitStats.averageCommitsPerMonth}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Per Month
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {analytics.commitStats.averageCommitsPerYear}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Per Year
-                  </p>
-                </div>
-              </div>
-
-             
-            </div>
-
-            {/* Languages Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* All Languages */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <ChartIcon />
-                  Top Languages (All Repositories)
-                </h3>
-                <div className="space-y-3">
-                  {analytics.topLanguages.map((lang) => (
-                    <LanguageBar
-                      key={lang.language}
-                      language={lang.language}
-                      percentage={lang.percentage}
-                      count={lang.count}
+          {/* Dashboard */}
+          {analytics && (
+            <div className="mt-8 space-y-6 animate-in">
+              {/* Profile dossier */}
+              <SectionCard className="p-5 sm:p-6">
+                <Eyebrow>PROFILE — DOSSIER</Eyebrow>
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="flex gap-4 sm:gap-5 flex-1 min-w-0">
+                    <Image
+                      src={analytics.user.avatar_url}
+                      alt={analytics.user.login}
+                      width={88}
+                      height={88}
+                      className="w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] rounded-xl object-cover border border-zinc-200 dark:border-zinc-700 shadow-sm shrink-0"
                     />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-[20px] sm:text-[22px] font-semibold tracking-[-0.02em] text-zinc-900 dark:text-white leading-none">
+                          {analytics.user.name || analytics.user.login}
+                        </h3>
+                        <a href={analytics.user.html_url} target="_blank" rel="noopener noreferrer" className="w-7 h-7 grid place-items-center rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                          <GithubIcon className="w-3.5 h-3.5" />
+                        </a>
+                        <span className="text-[12px] font-mono px-2 py-1 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900">@{analytics.user.login}</span>
+                      </div>
+                      {analytics.user.bio && <p className="mt-2 text-[13.5px] leading-6 text-zinc-600 dark:text-zinc-300 max-w-[560px]">{analytics.user.bio}</p>}
+                      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[12px] font-mono text-zinc-500 dark:text-zinc-400">
+                        {analytics.user.location && <span className="inline-flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-zinc-400" />{analytics.user.location}</span>}
+                        {analytics.user.company && <span className="inline-flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-zinc-400" />{analytics.user.company}</span>}
+                        {analytics.user.blog && (
+                          <a href={analytics.user.blog.startsWith("http") ? analytics.user.blog : `https://${analytics.user.blog}`} target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 dark:hover:text-zinc-100 underline decoration-zinc-300 underline-offset-4">website</a>
+                        )}
+                        {analytics.user.twitter_username && (
+                          <a href={`https://twitter.com/${analytics.user.twitter_username}`} target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 dark:hover:text-zinc-100">@{analytics.user.twitter_username}</a>
+                        )}
+                        <span className="inline-flex items-center gap-1.5">{analytics.user.followers.toLocaleString()} followers · {analytics.user.following.toLocaleString()} following</span>
+                      </div>
+                      <div className="mt-2 text-[11px] font-mono tracking-[0.06em] text-zinc-400">
+                        MEMBER SINCE {new Date(analytics.accountAge.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short" })} · {analytics.accountAge.years}y {analytics.accountAge.months}m
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="lg:w-[280px] shrink-0 flex lg:flex-col items-center lg:items-center gap-5 lg:border-l lg:border-zinc-100 dark:lg:border-zinc-800 lg:pl-6 py-2">
+                    <ActivityDial score={analytics.activityScore} />
+                    <div className="text-left lg:text-center">
+                      <div className="text-[11px] font-mono tracking-[0.14em] text-zinc-500 dark:text-zinc-400">ACTIVITY SCORE</div>
+                      <div className="text-[12px] leading-5 text-zinc-600 dark:text-zinc-400 mt-1 max-w-[200px]">
+                        Weighted percentile across stars, volume and community. {analytics.activityScore >= 80 ? "Highly active profile." : analytics.activityScore >= 60 ? "Solid activity." : "Growing."}
+                      </div>
+                      <div className="mt-2 inline-flex text-[11px] font-mono px-2 py-1 rounded-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300">
+                        {analytics.totalStars.toLocaleString()} ★ · {analytics.totalRepos} repos
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </SectionCard>
+
+              {/* Metric strip — primary */}
+              <SectionCard className="overflow-hidden">
+                <div className="px-5 sm:px-6 py-3 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                  <span className="text-[11px] font-mono tracking-[0.14em] text-zinc-500 dark:text-zinc-400">METRICS — OVERVIEW</span>
+                  <span className="text-[11px] font-mono text-zinc-400">{analytics.totalWatchers.toLocaleString()} watchers · {analytics.totalOpenIssues.toLocaleString()} open issues</span>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-zinc-200 dark:divide-zinc-800">
+                  <MetricCell label="REPOSITORIES" value={analytics.totalRepos} sub={`${analytics.user.public_gists} gists`} icon={<RepoIcon />} />
+                  <MetricCell label="TOTAL STARS" value={analytics.totalStars.toLocaleString()} sub={`~${analytics.repoStats.averageStars} / repo`} icon={<StarIcon />} />
+                  <MetricCell label="TOTAL FORKS" value={analytics.totalForks.toLocaleString()} sub={`~${analytics.repoStats.averageForks} / repo`} icon={<ForkIcon />} />
+                  <MetricCell label="FOLLOWERS" value={analytics.user.followers.toLocaleString()} sub={`${analytics.user.following.toLocaleString()} following`} icon={<UsersIcon />} />
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-zinc-200 dark:divide-zinc-800 border-t border-zinc-200 dark:border-zinc-800">
+                  <MetricCell label="FOLLOWING" value={analytics.user.following.toLocaleString()} icon={<UsersIcon />} />
+                  <MetricCell label="OPEN ISSUES" value={analytics.totalOpenIssues.toLocaleString()} icon={<span className="w-2 h-2 rounded-full bg-amber-500" />} />
+                  <MetricCell label="DIVERSITY" value={`${analytics.languageDiversity}%`} sub={`${analytics.topLanguages.length} languages`} icon={<ChartIcon />} />
+                  <MetricCell label="ACCOUNT AGE" value={`${analytics.accountAge.years}y ${analytics.accountAge.months}m`} sub={`Since ${new Date(analytics.accountAge.createdAt).getFullYear()}`} icon={<CalendarIcon />} />
+                </div>
+              </SectionCard>
+
+              {/* Commit history — KPIs only, no chart */}
+              <SectionCard className="p-5 sm:p-6">
+                <Eyebrow
+                  action={
+                    <span className="text-[11px] font-mono px-2 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-700 dark:text-amber-300">
+                      estimated · sampling top 30 repos
+                    </span>
+                  }
+                >
+                  COMMIT HISTORY
+                </Eyebrow>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { label: "Total estimated", value: analytics.commitStats.estimatedTotalCommits.toLocaleString() },
+                    { label: "Per day", value: analytics.commitStats.averageCommitsPerDay },
+                    { label: "Per month", value: analytics.commitStats.averageCommitsPerMonth },
+                    { label: "Per year", value: analytics.commitStats.averageCommitsPerYear },
+                  ].map((k) => (
+                    <div key={k.label} className="rounded-lg bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700 px-3 py-3">
+                      <div className="text-[11px] font-mono tracking-[0.08em] text-zinc-500 dark:text-zinc-400">{k.label.toUpperCase()}</div>
+                      <div className="text-[18px] font-semibold tabular tracking-[-0.02em] text-zinc-900 dark:text-white mt-1">{k.value}</div>
+                    </div>
                   ))}
                 </div>
-              </div>
+                <p className="mt-3 text-[11px] font-mono leading-4 text-zinc-500 dark:text-zinc-400">
+                  Annual distribution derived from contributors + commit_activity. If the API does not expose history, values are interpolated and weighted by account age.
+                </p>
+              </SectionCard>
 
-              {/* Recent Languages */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <FireIcon />
-                  Languages (Last 10 Repositories)
-                </h3>
-                <div className="space-y-3">
-                  {analytics.recentLanguages.length > 0 ? (
-                    analytics.recentLanguages.map((lang) => (
-                      <LanguageBar
-                        key={lang.language}
-                        language={lang.language}
-                        percentage={lang.percentage}
-                        count={lang.count}
-                      />
-                    ))
-                  ) : (
-                    <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                      No language data available
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Topics Section */}
-            {analytics.topTopics.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <TagIcon />
-                  Repository Topics / Themes
-                </h3>
-                <div className="flex flex-wrap">
-                  {analytics.topTopics.map((topic) => (
-                    <TopicBadge
-                      key={topic.topic}
-                      topic={topic.topic}
-                      count={topic.count}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Repository Highlights */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Most Starred */}
-              {analytics.repoStats.mostStarred && (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <StarIcon />
-                    Most Starred Repository
-                  </h3>
-                  <RepoCard repo={analytics.repoStats.mostStarred} />
-                </div>
-              )}
-
-              {/* Most Forked */}
-              {analytics.repoStats.mostForked && (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <ForkIcon />
-                    Most Forked Repository
-                  </h3>
-                  <RepoCard repo={analytics.repoStats.mostForked} />
-                </div>
-              )}
-            </div>
-
-            {/* Recently Active Repositories */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <FireIcon />
-                Recently Active Repositories
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {analytics.repoStats.recentlyActive.map((repo) => (
-                  <RepoCard key={repo.id} repo={repo} />
+              {/* Languages */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                {[
+                  { title: "Top languages — all repositories", items: analytics.topLanguages, icon: <ChartIcon /> },
+                  { title: "Recent focus — last 10 repositories", items: analytics.recentLanguages, icon: <CommitIcon /> },
+                ].map((col) => (
+                  <SectionCard key={col.title} className="p-5 sm:p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="w-7 h-7 grid place-items-center rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900"><span className="scale-75">{col.icon}</span></span>
+                      <h3 className="text-[13px] font-semibold tracking-[-0.01em] text-zinc-900 dark:text-white">{col.title}</h3>
+                    </div>
+                    {col.items.length > 0 ? (
+                      <>
+                        <LanguageSpine items={col.items} />
+                        <div className="mt-4">
+                          {col.items.map((l) => (
+                            <LanguageRow key={l.language} language={l.language} percentage={l.percentage} count={l.count} />
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-[13px] text-zinc-500 dark:text-zinc-400 py-8 text-center border border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">No language data</p>
+                    )}
+                  </SectionCard>
                 ))}
               </div>
-            </div>
 
-            {/* Repository Averages */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-                Repository Statistics
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {analytics.repoStats.averageStars}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Average Stars per Repo
-                  </p>
+              {/* Topics */}
+              {analytics.topTopics.length > 0 && (
+                <SectionCard className="p-5 sm:p-6">
+                  <Eyebrow>TOPICS — RECURRING THEMES</Eyebrow>
+                  <div className="flex flex-wrap gap-2">
+                    {analytics.topTopics.map((t) => (
+                      <span key={t.topic} className="inline-flex items-center gap-2 pl-3 pr-1.5 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-[12px] font-mono font-medium text-zinc-700 dark:text-zinc-200 hover:border-violet-300 dark:hover:border-violet-700 transition-colors">
+                        #{t.topic}
+                        <span className="min-w-5 h-5 grid place-items-center rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[11px] px-1.5">{t.count}</span>
+                      </span>
+                    ))}
+                  </div>
+                </SectionCard>
+              )}
+
+              {/* Highlights */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                {analytics.repoStats.mostStarred && (
+                  <SectionCard className="p-5 sm:p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="w-7 h-7 grid place-items-center rounded-md bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800"><StarIcon className="w-3.5 h-3.5" /></span>
+                      <h3 className="text-[13px] font-semibold text-zinc-900 dark:text-white">Most starred</h3>
+                    </div>
+                    <RepoArtifact repo={analytics.repoStats.mostStarred} />
+                  </SectionCard>
+                )}
+                {analytics.repoStats.mostForked && (
+                  <SectionCard className="p-5 sm:p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="w-7 h-7 grid place-items-center rounded-md bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 border border-violet-200 dark:border-violet-800"><ForkIcon className="w-3.5 h-3.5" /></span>
+                      <h3 className="text-[13px] font-semibold text-zinc-900 dark:text-white">Most forked</h3>
+                    </div>
+                    <RepoArtifact repo={analytics.repoStats.mostForked} />
+                  </SectionCard>
+                )}
+              </div>
+
+              {/* Recently active */}
+              <SectionCard className="p-5 sm:p-6">
+                <Eyebrow action={<span className="text-[11px] font-mono text-zinc-400">sorted: pushed_at ↓</span>}>RECENT ACTIVITY</Eyebrow>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {analytics.repoStats.recentlyActive.map((r) => (
+                    <RepoArtifact key={r.id} repo={r} />
+                  ))}
                 </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                    {analytics.repoStats.averageForks}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Average Forks per Repo
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                    {analytics.repoStats.averageSize} KB
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Average Repo Size
-                  </p>
+              </SectionCard>
+
+              {/* Footprint + timeline */}
+              <div className="grid lg:grid-cols-3 gap-6">
+                <SectionCard className="p-5 sm:p-6 lg:col-span-1">
+                  <h3 className="text-[12px] font-mono tracking-[0.1em] text-zinc-500 dark:text-zinc-400 mb-4">FOOTPRINT — AVERAGES</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-baseline justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
+                      <span className="text-[13px] text-zinc-600 dark:text-zinc-400">Stars / repo</span>
+                      <span className="text-[16px] font-semibold tabular text-zinc-900 dark:text-white">{analytics.repoStats.averageStars}</span>
+                    </div>
+                    <div className="flex items-baseline justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
+                      <span className="text-[13px] text-zinc-600 dark:text-zinc-400">Forks / repo</span>
+                      <span className="text-[16px] font-semibold tabular text-zinc-900 dark:text-white">{analytics.repoStats.averageForks}</span>
+                    </div>
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-[13px] text-zinc-600 dark:text-zinc-400">Avg. size</span>
+                      <span className="text-[16px] font-semibold tabular text-zinc-900 dark:text-white">{analytics.repoStats.averageSize} KB</span>
+                    </div>
+                  </div>
+                </SectionCard>
+
+                <div className="lg:col-span-2 grid sm:grid-cols-2 gap-6">
+                  {analytics.repoStats.oldest && (
+                    <SectionCard className="p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <CalendarIcon className="w-3.5 h-3.5 text-zinc-400" />
+                        <span className="text-[11px] font-mono tracking-[0.1em] text-zinc-500 dark:text-zinc-400">FIRST REPOSITORY</span>
+                      </div>
+                      <RepoArtifact repo={analytics.repoStats.oldest} />
+                      <div className="mt-2 text-[11px] font-mono text-zinc-400">Created on {new Date(analytics.repoStats.oldest.created_at).toLocaleDateString("en-US")}</div>
+                    </SectionCard>
+                  )}
+                  {analytics.repoStats.newest && (
+                    <SectionCard className="p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <CommitIcon className="w-3.5 h-3.5 text-zinc-400" />
+                        <span className="text-[11px] font-mono tracking-[0.1em] text-zinc-500 dark:text-zinc-400">LATEST REPOSITORY</span>
+                      </div>
+                      <RepoArtifact repo={analytics.repoStats.newest} />
+                      <div className="mt-2 text-[11px] font-mono text-zinc-400">Created on {new Date(analytics.repoStats.newest.created_at).toLocaleDateString("en-US")}</div>
+                    </SectionCard>
+                  )}
                 </div>
               </div>
             </div>
+          )}
+        </div>
+      </main>
 
-            {/* First & Last Repository */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {analytics.repoStats.oldest && (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <CalendarIcon />
-                    First Repository
-                  </h3>
-                  <RepoCard repo={analytics.repoStats.oldest} />
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                    Created{" "}
-                    {new Date(
-                      analytics.repoStats.oldest.created_at,
-                    ).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
-              {analytics.repoStats.newest && (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <FireIcon />
-                    Latest Repository
-                  </h3>
-                  <RepoCard repo={analytics.repoStats.newest} />
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                    Created{" "}
-                    {new Date(
-                      analytics.repoStats.newest.created_at,
-                    ).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-          <a href="https://github.com/diegoperea20" target="_blank" rel="noopener noreferrer">
-            <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-              Created by <span className="font-semibold">Diego Ivan Perea Montealegre</span>
-            </p>
+      <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/60 backdrop-blur">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-[52px] flex items-center justify-between gap-4">
+          <a href="https://github.com/diegoperea20" target="_blank" rel="noopener noreferrer" className="text-[12px] font-mono text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
+            Created by <span className="font-semibold text-zinc-700 dark:text-zinc-200">Diego Ivan Perea Montealegre</span>
           </a>
+          <span className="hidden sm:inline text-[11px] font-mono text-zinc-400">Data via GitHub REST API</span>
         </div>
       </footer>
     </div>
